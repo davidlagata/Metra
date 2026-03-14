@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>METRA</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0F14">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-title" content="METRA">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #0D0F14;
+  --bg2:   #141720;
+  --bg3:   #1C1F2A;
+  --bd:    #252836;
+  --amber: #E8960A;
+  --amb2:  #F5B82E;
+  --green: #22C55E;
+  --blue:  #60A5FA;
+  --purp:  #A78BFA;
+  --red:   #EF4444;
+  --text:  #F0F0E8;
+  --muted: #6B7280;
+  --sub:   #9CA3AF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── BACKGROUND GRID ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,150,10,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,150,10,.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── TOPBAR ─── */
+.bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,20,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--bd);
+  padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.bar-brand {
+  display: flex; align-items: baseline; gap: 8px;
+}
+.bar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800;
+  color: var(--amber);
+  letter-spacing: .1em;
+}
+.bar-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; color: var(--muted);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  border: 1px solid var(--bd);
+  padding: 2px 5px; border-radius: 3px;
+}
+.bar-right {
+  display: flex; align-items: center; gap: 8px;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+.clock {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--sub);
+}
+
+/* ─── MAIN ─── */
+.main {
+  position: relative; z-index: 1;
+  padding: 16px 12px 40px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  text-align: center;
+  padding: 24px 0 8px;
+  animation: fadeUp .5s ease both;
+}
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px; font-weight: 800;
+  color: var(--amber);
+  letter-spacing: .12em;
+  line-height: 1;
+}
+.hero-sub {
+  font-size: 10px; color: var(--muted);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.hero-line {
+  width: 40px; height: 2px;
+  background: var(--amber);
+  margin: 10px auto 0;
+  opacity: .4;
+}
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  display: flex; align-items: center; gap: 8px;
+  animation: fadeUp .4s ease both;
+}
+.section-label-text {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--muted);
+  font-weight: 600;
+}
+.section-label-line {
+  flex: 1; height: 1px;
+  background: var(--bd);
+}
+
+/* ─── SITE CARD ─── */
+.site-card {
+  background: var(--bg2);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: fadeUp .4s ease both;
+  transition: border-color .2s;
+}
+.site-card:active { border-color: var(--amber); }
+
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.site-header:active { background: rgba(232,150,10,.04); }
+
+.site-left {
+  display: flex; align-items: center; gap: 10px;
+}
+.site-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.site-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 800;
+  letter-spacing: .05em;
+  line-height: 1;
+}
+.site-desc {
+  font-size: 9px; color: var(--muted);
+  margin-top: 2px; letter-spacing: .04em;
+}
+.site-right {
+  display: flex; align-items: center; gap: 6px;
+}
+.site-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--muted);
+  background: var(--bg3);
+  border: 1px solid var(--bd);
+  padding: 2px 7px; border-radius: 20px;
+}
+.site-chevron {
+  font-size: 14px; color: var(--muted);
+  transition: transform .3s ease;
+  line-height: 1;
+}
+.site-card.open .site-chevron { transform: rotate(180deg); }
+
+/* ─── DASH LIST ─── */
+.dash-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease;
+  border-top: 0px solid var(--bd);
+}
+.site-card.open .dash-list {
+  max-height: 400px;
+  border-top: 1px solid var(--bd);
+}
+
+.dash-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bd);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background .15s;
+}
+.dash-item:last-child { border-bottom: none; }
+.dash-item:active { background: rgba(255,255,255,.04); }
+
+.dash-left {
+  display: flex; align-items: center; gap: 10px;
+}
+.dash-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.dash-name {
+  font-size: 13px; font-weight: 500;
+}
+.dash-right {
+  display: flex; align-items: center; gap: 6px;
+}
+.dash-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  padding: 2px 6px; border-radius: 10px;
+  letter-spacing: .05em;
+}
+.status-live {
+  background: rgba(34,197,94,.12);
+  color: var(--green);
+}
+.status-soon {
+  background: rgba(107,114,128,.12);
+  color: var(--muted);
+}
+.dash-arrow {
+  font-size: 12px; color: var(--muted);
+}
+
+/* ─── COMING SOON CARD ─── */
+.soon-card {
+  background: var(--bg2);
+  border: 1px dashed var(--bd);
+  border-radius: 12px;
+  padding: 16px 14px;
+  display: flex; align-items: center; gap: 10px;
+  opacity: .5;
+  animation: fadeUp .4s ease both;
+}
+.soon-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.soon-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 800;
+  letter-spacing: .05em;
+}
+.soon-sub {
+  font-size: 9px; color: var(--muted); margin-top: 2px;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--muted);
+  letter-spacing: .08em;
+  padding: 4px 0 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="bar">
+  <div class="bar-brand">
+    <div class="bar-title">METRA</div>
+    <div class="bar-tag">Operations Hub</div>
+  </div>
+  <div class="bar-right">
+    <div class="live-dot"></div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-title">METRA</div>
+    <div class="hero-sub">Mining Operations Intelligence</div>
+    <div class="hero-line"></div>
+  </div>
+
+  <!-- MINES -->
+  <div class="section-label" style="animation-delay:.05s">
+    <div class="section-label-text">Mines</div>
+    <div class="section-label-line"></div>
+  </div>
+
+  <!-- CMC -->
+  <div class="site-card open" id="card-cmc" style="animation-delay:.08s">
+    <div class="site-header" onclick="toggle('cmc')">
+      <div class="site-left">
+        <div class="site-icon" style="background:rgba(232,150,10,.12);color:var(--amber)">⛏</div>
+        <div>
+          <div class="site-name" style="color:var(--amber)">CMC</div>
+          <div class="site-desc">Riruwai · Sn / Zn / W</div>
+        </div>
+      </div>
+      <div class="site-right">
+        <div class="site-count">5 dashboards</div>
+        <div class="site-chevron">⌄</div>
+      </div>
+    </div>
+    <div class="dash-list">
+      <a class="dash-item" href="cmc/flash.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--amber)"></div>
+          <div class="dash-name">Flash Report</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-live">LIVE</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="cmc/plant.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--green)"></div>
+          <div class="dash-name">Plant</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="cmc/mining.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--blue)"></div>
+          <div class="dash-name">Mining</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="cmc/geology.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--purp)"></div>
+          <div class="dash-name">Geology</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="cmc/maintenance.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--red)"></div>
+          <div class="dash-name">Maintenance</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- FPL -->
+  <div class="site-card" id="card-fpl" style="animation-delay:.11s">
+    <div class="site-header" onclick="toggle('fpl')">
+      <div class="site-left">
+        <div class="site-icon" style="background:rgba(96,165,250,.12);color:var(--blue)">⛏</div>
+        <div>
+          <div class="site-name" style="color:var(--blue)">FPL</div>
+          <div class="site-desc">Mine Site</div>
+        </div>
+      </div>
+      <div class="site-right">
+        <div class="site-count">5 dashboards</div>
+        <div class="site-chevron">⌄</div>
+      </div>
+    </div>
+    <div class="dash-list">
+      <a class="dash-item" href="fpl/flash.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--amber)"></div>
+          <div class="dash-name">Flash Report</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="fpl/plant.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--green)"></div>
+          <div class="dash-name">Plant</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="fpl/mining.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--blue)"></div>
+          <div class="dash-name">Mining</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="fpl/geology.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--purp)"></div>
+          <div class="dash-name">Geology</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+      <a class="dash-item" href="fpl/maintenance.html">
+        <div class="dash-left">
+          <div class="dash-dot" style="background:var(--red)"></div>
+          <div class="dash-name">Maintenance</div>
+        </div>
+        <div class="dash-right">
+          <div class="dash-status status-soon">SOON</div>
+          <div class="dash-arrow">›</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- DRILLING -->
+  <div class="section-label" style="animation-delay:.13s">
+    <div class="section-label-text">Drilling</div>
+    <div class="section-label-line"></div>
+  </div>
+
+  <!-- SIR -->
+  <div class="site-card" id="card-sir" style="animation-delay:.15s">
+    <div class="site-header" onclick="toggle('sir')">
+      <div class="site-left">
+        <div class="site-icon" style="background:rgba(167,139,250,.12);color:var(--purp)">🔩</div>
+        <div>
+          <div class="site-name" style="color:var(--purp)">SIR</div>
+          <div class="site-desc">Drilling Operations</div>
+        </div>
+      </div>
+      <div class="site-right">
+        <div class="site-count">5 dashboards</div>
+        <div class="site-chevron">⌄</div>
+      </div>
+    </div>
+    <div class="dash-list">
+      <a class="dash-item" href="sir/flash.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--amber)"></div><div class="dash-name">Flash Report</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="sir/plant.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--green)"></div><div class="dash-name">Plant</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="sir/mining.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--blue)"></div><div class="dash-name">Mining</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="sir/geology.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--purp)"></div><div class="dash-name">Geology</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="sir/maintenance.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--red)"></div><div class="dash-name">Maintenance</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- GSL -->
+  <div class="site-card" id="card-gsl" style="animation-delay:.17s">
+    <div class="site-header" onclick="toggle('gsl')">
+      <div class="site-left">
+        <div class="site-icon" style="background:rgba(34,197,94,.12);color:var(--green)">🔩</div>
+        <div>
+          <div class="site-name" style="color:var(--green)">GSL</div>
+          <div class="site-desc">Drilling Operations</div>
+        </div>
+      </div>
+      <div class="site-right">
+        <div class="site-count">5 dashboards</div>
+        <div class="site-chevron">⌄</div>
+      </div>
+    </div>
+    <div class="dash-list">
+      <a class="dash-item" href="gsl/flash.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--amber)"></div><div class="dash-name">Flash Report</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="gsl/plant.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--green)"></div><div class="dash-name">Plant</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="gsl/mining.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--blue)"></div><div class="dash-name">Mining</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="gsl/geology.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--purp)"></div><div class="dash-name">Geology</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+      <a class="dash-item" href="gsl/maintenance.html">
+        <div class="dash-left"><div class="dash-dot" style="background:var(--red)"></div><div class="dash-name">Maintenance</div></div>
+        <div class="dash-right"><div class="dash-status status-soon">SOON</div><div class="dash-arrow">›</div></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">METRA v1.0 · Operations Intelligence Platform</div>
+
+</div>
+
+<script>
+// Clock
+function tick() {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    n.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+setInterval(tick, 1000); tick();
+
+// Toggle cards
+function toggle(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
